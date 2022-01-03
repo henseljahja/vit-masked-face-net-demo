@@ -1,10 +1,10 @@
 # %%
 
-import cv2
 import numpy as np
 import streamlit as st
 import torch
 import torch.nn as nn
+from cv2 import COLOR_RGB2BGR, cvtColor, resize
 from PIL import Image
 from pytorch_grad_cam import GradCAM
 from pytorch_grad_cam.utils.image import preprocess_image, show_cam_on_image
@@ -39,7 +39,7 @@ def grad_cam(model, image):
     rgb_img = image.convert("RGB")
     rgb_img = np.array(rgb_img)
     rgb_img = rgb_img[:, :, ::-1].copy()
-    rgb_img = cv2.resize(rgb_img, (224, 224))
+    rgb_img = resize(rgb_img, (224, 224))
     rgb_img = np.float32(rgb_img) / 255
     input_tensor = preprocess_image(rgb_img, mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
     target_category = None
@@ -54,7 +54,7 @@ def grad_cam(model, image):
     grayscale_cam = grayscale_cam[0, :]
 
     cam_image = show_cam_on_image(rgb_img, grayscale_cam)
-    cam_image = cv2.cvtColor(cam_image, cv2.COLOR_RGB2BGR)
+    cam_image = cvtColor(cam_image, COLOR_RGB2BGR)
 
     return cam_image
 
